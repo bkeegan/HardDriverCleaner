@@ -300,7 +300,7 @@ Function HardDriveCleaner
 		
 		
 		#==============================================================CLEAN TEMP FOLDER (ALL USERS)
-			if($ieCacheAllUsers)
+		if($ieCacheAllUsers)
 		{
 			CleanProfileFolder -u $targetDrive$usersFolder -t $userTmp -obj $hdCleanUpResults -n "User Temp"
 		}
@@ -320,13 +320,12 @@ Function HardDriveCleaner
 		$hdCleanUpResults.Add(".DISK: New Freespace", $freeSpaceNewMB)
 		
 		#==============================================================EMAIL INFORMATION
+		#generate HTML Report
 		$hdCleanUpResults.GetEnumerator() | Sort-Object -property Key | ConvertTo-HTML | Out-File "$($tempFolder.value)\$dateStamp-HDCleanUpReport.html"
 		If(!($doNotSendEmail))
 		{
 			$emailSubject="HD Cleaning Report - $computerName"
 			$emailBody = "Disk cleaning operations were performed on $computerName. The currenly low disk threshold is set to $lowDiskThreshold MB. See attached report for details."
-			
-			#generate HTML Report
 			#send email to specified recipient and attach HTML report
 			Send-MailMessage -To $emailRecipient -Subject $emailSubject -smtpServer $emailServer -From $emailSender -body $emailBody  -Attachments "$($tempFolder.value)\$dateStamp-HDCleanUpReport.html"
 		}
